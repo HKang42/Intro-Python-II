@@ -40,7 +40,7 @@ room['treasure'].s_to = room['narrow']
 #
 
 # add some times
-room['foyer'].items = [Item("Rock", "It's a rock.")]
+room['foyer'].items = [Item("Rock", "It's a rock...")]
 room['overlook'].items = []
 room['narrow'].items = []
 room['treasure'].items = []
@@ -65,57 +65,101 @@ move_error = "\nInvalid Direciton. Please enter a different one."
 loc = room['outside']
 
 while True:
+    print("\n________________________________________________________________________")
     print("\nCurrent Location:", loc.name)
     print("Room Description:", loc.desc)
-    move = input("Type a direction (n, s, e, w) or q to exit: ")
+
+    ### MOVEMENT
+    move = input("\nType a direction (n, s, e, w) or q to exit: ")
     
+    while move not in ['n', 's', 'e', 'w', 'q']:
+        print("Please enter a valid command.")
+        move = input("\nType a direction (n, s, e, w) or q to exit: ")
+
     if move == 'q':
         break
-    
-    if move not in ['n', 's', 'e', 'w']:
-        print("\nPlease enter a valid command.")
-        continue
-    
-    """
-    elif move == "n":
-        if loc.n_to == None:
-            print(move_error)
-            continue
-        else:
-            loc = loc.n_to
-    
-    elif move == "s":
-        if loc.s_to == None:
-            print(move_error)
-            continue
-        else:
-            loc = loc.s_to
-
-    elif move == "e":
-        if loc.e_to == None:
-            print(move_error)
-            continue
-        else:
-            loc = loc.e_to
-
-    elif move == "w":
-        if loc.w_to == None:
-            print(move_error)
-            continue
-        else:
-            loc = loc.w_to
-    
-    else:
-        print("\nPlease enter a valid command.")
-    """
-    
 
     move = move + "_to"
 
     if getattr(loc, move) == None:
         print(move_error)
         continue
-    
+        
     else:
         loc = getattr(loc, move)
+        print("\nYou enter the", loc.name)
+    
+
+    ### ITEM CHECK
+    check_item = input("Would you like to search for items? (y/n) ")
+
+    while check_item != 'n' and check_item != 'y':
+        print("Please enter a valid command.")
+        check_item = input("\nWould you like to search for items? (y/n) ")
+
+    if check_item == "n":
+        pass
+    
+    elif check_item == "y":
+        room_items = loc.items
+
+        if len(room_items) == 0:
+            print("\nThere are no items in this room.")
+
+        else:
+            print("\nYou found:\n")
+            for item in room_items:
+                print("Name: {:<10} Description: {}".format(item.name, item.desc))
+
+            get_item = input("\nWould you like to take an item? (y/n) ")
+            while check_item != 'n' and check_item != 'y':
+                print("Please enter a valid command.")
+                check_item = input("\nWould you like to take an item? (y/n) ")
+            
+            if get_item == "y":
+                item_name = int(input("\nEnter the item name. "))
+
+                while number not in [i for i in range(0, len(room_items))]:
+                    print("Please enter a valid number.")
+                    number = int(input("\nEnter the item number. "))
+                
+                player1.get_item(room_items.pop(number-1))
+                
+                get_more = len(room_items)
+                
+
+
+
+"""
+# Old movement command code that has been replaced
+elif move == "n":
+    if loc.n_to == None:
+        print(move_error)
         continue
+    else:
+        loc = loc.n_to
+
+elif move == "s":
+    if loc.s_to == None:
+        print(move_error)
+        continue
+    else:
+        loc = loc.s_to
+
+elif move == "e":
+    if loc.e_to == None:
+        print(move_error)
+        continue
+    else:
+        loc = loc.e_to
+
+elif move == "w":
+    if loc.w_to == None:
+        print(move_error)
+        continue
+    else:
+        loc = loc.w_to
+
+else:
+    print("\nPlease enter a valid command.")
+"""
